@@ -1,0 +1,105 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+```{r}
+plot(cars)
+cars
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+```{r}
+# Instalação de pacotes
+#install.packages("openxlsx")
+#install.packages("tidyverse")
+#install.packages("plotly")
+#install.packages("dplyr")
+
+
+# Utilização de pacotes
+library(openxlsx)
+library(tidyverse)
+library(plotly)
+library(plyr)
+
+```
+
+```{r}
+# Variáveis
+
+#String
+Var_String <- "Aula Barbara"
+Var_String
+
+#Numérica
+Var_Numerica <- 5
+Var_Numerica
+
+#Array de 2 à 15
+Var_10ate20 <- 10:20
+Var_10ate20
+
+#Terceira posição do vetor
+Var_10ate20[3]
+
+#DataFrame
+
+Nome <- c("Aluno 1","Aluno 2","Aluno 3","Aluno 4","Aluno 5")
+Notas <- c(8, 6.5, 7, 9.2, 4)
+ 
+df_alunos <- data_frame(Nome, Notas)
+View(df_alunos)
+
+```
+
+```{r}
+#Carregar arquivo excel
+Arq_Excel <- read.xlsx("DadosTemplate.xlsx")
+
+#Visualizar dados carregados
+View(Arq_Excel)
+
+#Média de presença Matéria1
+mean(Arq_Excel$Materia1)
+
+summary(Arq_Excel)
+
+```
+
+```{r}
+#Exportar csv
+write.table(df_alunos, file = "alunos.csv",row.names = FALSE, sep=";")
+
+write.table(Arq_Excel, file = "alunos2.csv",row.names = FALSE, sep=";")
+```
+
+```{r}
+#Gráfico de barras
+df_alunos %>%
+  ggplot(aes(x=Nome, y=Notas, fill=Nome)) +
+  geom_bar(stat="identity") 
+
+ggplot(df_alunos, aes(x=Nome, y=Notas, fill = Nome)) + geom_bar(stat="identity")
+
+```
+
+```{r}
+#Gráfico de pizza (Aprovados - % sim e nao)
+plot_pizza <- ddply(Arq_Excel, c("Aprovado"), 
+        summarize, qtd = length(unique(Matricula)))
+
+plot_pizza
+pie(plot_pizza$qtd, labels = plot_pizza$Aprovado, main="Aprovados x Reprovados")
+```
+
